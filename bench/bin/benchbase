@@ -69,7 +69,7 @@ engines=(
   #fence
 )
 
-for bm_type in A; do
+for bm_type in A B C E F; do
   cd $base_path/third_party/benchbase
 
   if [ $bm_type = A ]; then
@@ -78,6 +78,10 @@ for bm_type in A; do
     weight=95,0,0,5,0,0
   elif [ $bm_type = C ]; then
     weight=100,0,0,0,0,0
+  elif [ $bm_type = E ]; then
+    weight=0,5,95,0,0,0
+  elif [ $bm_type = F ]; then
+    weight=50,0,0,0,0,50
   else
     weight=0,0,0,100,0,0
   fi
