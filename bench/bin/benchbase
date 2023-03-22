@@ -16,13 +16,14 @@ message () {
 
 cd "$(dirname "$0")"
 base_path=$(pwd)/../..
-cd $base_path/third_party/benchbase
+bench_path=$base_path/third_party/benchbase/target
 
 benchmark=$1
 
 ### Install and Build
-zip_file=target/benchbase-mysql.zip
-if [ ! -f "$zip_file" ]; then
+zip_file=$bench_path/benchbase-mysql.zip
+ex_file=$bench_path/benchbase-mysql/benchbase.jar
+if [ ! -f "$ex_file" ]; then
   message " It seems to be the first-time execution of this script. Clean & Build the mvn package..."
 
   ### Install JDK-17
@@ -40,25 +41,14 @@ if [ ! -f "$zip_file" ]; then
   fi
 
   ### Build JAR
+  cd $bench_path
   ./mvnw clean package -P mysql -e
   unzip $zip_file
   cd -
 fi
 
-function EDIT_FENCE()
-{
-local IS_FENCING=$1
-cd $base_path
-sed -i "s/#define FENCE.*/#define FENCE $IS_FENCING/" ha_lineairdb.cc
-cd $base_path/engine
-ninja lineairdb_storage_engine -j 4
-sudo cp plugin_output_directory/ha_lineairdb_storage_engine.so /usr/lib/mysql/plugin
-cd $base_path/third_party/benchbase
-}
-
 ### Benchmark
 message "Execute the benchmarking $benchmark"
-ex_file=benchbase-mysql/benchbase.jar
 
 step=16
 num_threads=(1 $(seq $step $step `nproc`))
@@ -66,11 +56,9 @@ engines=(
   myisam 
   lineairdb 
   innodb 
-  #fence
 )
 
 for bm_type in A B C E F; do
-  cd $base_path/third_party/benchbase
 
   if [ $bm_type = A ]; then
     weight=50,0,0,50,0,0
@@ -88,15 +76,9 @@ for bm_type in A B C E F; do
 
   rm -rf $base_path/bench/results/*
   sed -i "s/<weights>.*<\/weights>/<weights>$weight<\/weights>/" $base_path/bench/config/ycsb.xml
-  EDIT_FENCE false
   
   for engine in ${engines[@]}; do
-    if [ $engine = "fence" ]; then
-      EDIT_FENCE true
-      sudo sed -i s/default_storage_engine.*/default_storage_engine=lineairdb/ /etc/mysql/mysql.conf.d/mysqld.cnf
-    else
       sudo sed -i s/default_storage_engine.*/default_storage_engine=$engine/ /etc/mysql/mysql.conf.d/mysqld.cnf
-    fi
 
     for num_thread in ${num_threads[@]}; do
       sudo sed -i "s/innodb_thread_concurrency.*/innodb_thread_concurrency=$num_thread/" /etc/mysql/mysql.conf.d/mysqld.cnf
@@ -105,6 +87,7 @@ for bm_type in A B C E F; do
       # /home/tatsu/LineairDB-storage-engine/build/bin/mysql -u bench < $base_path/bench/reset.sql
       mysql -u bench < $base_path/bench/reset.sql
 
+      cd $bench_path/benchbase-mysql
       java -jar $ex_file -b $benchmark -c $base_path/bench/config/$benchmark.xml --create=true --load=true --execute=true
 
       mkdir -p $base_path/bench/results/$engine/thread_$num_thread

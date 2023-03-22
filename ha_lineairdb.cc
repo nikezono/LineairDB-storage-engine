@@ -107,7 +107,7 @@
 
 #define BYTE_BIT_NUMBER (8)
 #define BLOB_MEMROOT_ALLOC_SIZE (8192)
-#define FENCE true
+#define FENCE false
 
 LineairDB_share::LineairDB_share() {
   thr_lock_init(&lock);
