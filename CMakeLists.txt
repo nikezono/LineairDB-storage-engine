@@ -23,10 +23,14 @@
 set(CMAKE_CXX_STANDARD 17)
 
 add_subdirectory(third_party/LineairDB)
+<<<<<<< HEAD
 set(LINEAIRDB_PLUGIN_DYNAMIC "ha_lineairdb")
 set(LINEAIRDB_SOURCES ha_lineairdb.cc ha_lineairdb.hh 
                       lineairdb_field.cc lineairdb_field.hh
                       lineairdb_transaction.cc lineairdb_transaction.hh)
+=======
+set(LINEAIRDB_SOURCES ha_lineairdb.cc ha_lineairdb_handler_miscs.cc)
+>>>>>>> updt
 add_definitions(-DMYSQL_SERVER)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error -Wextra -mcx16 -fPIC")
 

@@ -1019,13 +1019,35 @@ int ha_lineairdb::set_fields_from_lineairdb(uchar* buf,
   /**
    * store each column value to corresponding field
   */
+<<<<<<< HEAD
   size_t columnIndex = 0;
+=======
+  std::bitset<BYTE_BIT_NUMBER> nullBit(0xff);
+  /* index to store the null flag */
+  int null_byte_cnt = 0;
+  /* index to store the bit wihtin a flag */
+  int clm_cnt                   = 0;
+  std::byte* p                  = (std::byte*)malloc(read_buf_size);
+  auto* init_p = p;
+
+  memcpy(p, read_buf, read_buf_size);
+  std::byte* buf_end = p + read_buf_size;
+>>>>>>> updt
   for (Field** field = table->field; *field; field++) {
     const auto mysqlFieldValue = ldbField.get_column_of_row(columnIndex++);
     (*field)->store(mysqlFieldValue.c_str(), mysqlFieldValue.length(),
                     &my_charset_bin, CHECK_FIELD_WARN);
     if (store_blob_to_field(field)) return HA_ERR_OUT_OF_MEM;
   }
+<<<<<<< HEAD
+=======
+
+  write_buffer_.length(0);
+  uchar mask = nullBit.to_ulong();
+  memcpy(&buf[null_byte_cnt], &mask, 1);
+
+  delete(init_p);
+>>>>>>> updt
   dbug_tmp_restore_column_map(table->write_set, org_bitmap);
   return 0;
 }
