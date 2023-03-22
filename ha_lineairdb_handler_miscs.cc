@@ -210,7 +210,7 @@ static SHOW_VAR func_status[] = {
      SHOW_SCOPE_GLOBAL},
     {nullptr, nullptr, SHOW_UNDEF, SHOW_SCOPE_UNDEF}};
 
-mysql_declare_plugin(lineairdb){
+mysql_declare_plugin(lineairdb_storage_engine){
     MYSQL_STORAGE_ENGINE_PLUGIN,
     &lineairdb_storage_engine,
     "LINEAIRDB",

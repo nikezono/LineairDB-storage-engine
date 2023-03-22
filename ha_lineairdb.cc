@@ -871,7 +871,7 @@ int ha_lineairdb::set_fields_from_lineairdb(uchar* buf,
   /* index to store the bit wihtin a flag */
   int clm_cnt                   = 0;
   std::byte* p                  = (std::byte*)malloc(read_buf_size);
-  const std::byte* const init_p = p;
+  auto* init_p = p;
 
   memcpy(p, read_buf, read_buf_size);
   std::byte* buf_end = p + read_buf_size;
@@ -924,7 +924,7 @@ int ha_lineairdb::set_fields_from_lineairdb(uchar* buf,
   uchar mask = nullBit.to_ulong();
   memcpy(&buf[null_byte_cnt], &mask, 1);
 
-  free((void*)init_p);
+  delete(init_p);
   dbug_tmp_restore_column_map(table->write_set, org_bitmap);
   return 0;
 }
