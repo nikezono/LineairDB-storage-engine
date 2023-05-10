@@ -12,7 +12,7 @@ def makeDFfromCSV(clm, xaxis):
     sample = pd.DataFrame(columns=clm)
     for db in args.engine:
         csvlist = glob.glob(
-            f'{os.path.dirname(__file__)}/../results/{db}/*/*results.csv')
+            f'{os.path.dirname(__file__)}/../results/{args.workload}/{db}/*/*results.csv')
         csvlist = sorted(csvlist, key=lambda x: os.path.basename(x))
         clm = []
         for f in csvlist:
@@ -59,5 +59,8 @@ if __name__ == "__main__":
     parser.add_argument('--xaxis', metavar='N', type=int, nargs='*',
                         help='step of the xaxis',
                         default=list(range(1, multiprocessing.cpu_count() + 1, 1)))
+    parser.add_argument('--workload', metavar='W', type=str, nargs=1,
+                        help='workload type',
+                        default="a")
     args = parser.parse_args()
     main(args)
