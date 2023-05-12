@@ -52,14 +52,14 @@ fi
 message "Execute the benchmarking $benchmark"
 
 step=8
-num_threads=(1 $(seq $step $step 72))
+num_threads=(1 $(seq $step $step 144))
 engines=(
   lineairdb 
   innodb 
   myisam 
 )
 
-for bm_type in E; do
+for bm_type in A B C E F; do
 
   if [ $bm_type = A ]; then
     weight=50,0,0,50,0,0
@@ -93,11 +93,10 @@ for bm_type in E; do
       mkdir -p $base_path/bench/results/$bm_type/$engine/thread_$num_thread
       mv results/*.csv $base_path/bench/results/$bm_type/$engine/thread_$num_thread
     done
-
   done
 
-  #mkdir -p $base_path/bench/plots/ycsb/$bm_type
-  #cd $base_path/bench/plots/ycsb/$bm_type
-  #python3 $base_path/bench/bin/plot.py --engine ${engines[@]} --xaxis ${num_threads[@]}
+  mkdir -p $base_path/bench/plots/ycsb/$bm_type
+  cd $base_path/bench/plots/ycsb/$bm_type
+  python3 $base_path/bench/bin/plot.py --engine ${engines[@]} --xaxis ${num_threads[@]}
 done
 message 'Finish the benchmarking'
