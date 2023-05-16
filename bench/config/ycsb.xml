@@ -5,7 +5,7 @@
     <type>MYSQL</type>
     <driver>com.mysql.cj.jdbc.Driver</driver>
     <url>jdbc:mysql://localhost:3306/benchbase?rewriteBatchedStatements=true&amp;sslMode=DISABLED</url>
-    <username>root</username>
+    <username>bench</username>
     <password></password>
     <isolation>TRANSACTION_SERIALIZABLE</isolation>
     <batchsize>128</batchsize>
@@ -15,12 +15,12 @@
     <scalefactor>1</scalefactor>
 
     <!-- The workload -->
-    <terminals>1</terminals>
+    <terminals>64</terminals>
     <works>
         <work>
-            <time>60</time>
+            <time>30</time>
             <rate>10000</rate>
-            <weights>50,5,15,10,10,10</weights>
+            <weights>50,0,0,50,0,0</weights>
         </work>
     </works>
 

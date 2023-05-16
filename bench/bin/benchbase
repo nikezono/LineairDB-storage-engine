@@ -1,6 +1,7 @@
 #! /bin/bash
 
 set -xu
+set -e
 
 if [ $# -eq 0 ]; then
     echo "No arguments supplied."
@@ -80,16 +81,16 @@ fi
 step=16
 num_threads=(1 $(seq $step $step `nproc`))
 engines=(
+  lineairdb
   myisam
-  lineairdb 
   innodb
-  blackhole 
+  #blackhole 
   #fence
 )
 
 INSTALL_LINEAIRDB_TO_MYSQL
 
-for bm_type in A B C E F write; do
+for bm_type in A B C E F; do
   cd $base_path/third_party/benchbase
 
   if [ $bm_type = A ]; then
@@ -127,7 +128,9 @@ for bm_type in A B C E F write; do
 
         java -jar $ex_file -b $benchmark -c $base_path/bench/config/$benchmark.xml --create=true --load=true --execute=true
 
+        mkdir -p $base_path/bench/results/$bm_type/$engine/thread_$num_thread
         mkdir -p $base_path/bench/results/$engine/thread_$num_thread
+        cp results/*.csv $base_path/bench/results/$bm_type/$engine/thread_$num_thread
         mv results/*.csv $base_path/bench/results/$engine/thread_$num_thread
       done
 
