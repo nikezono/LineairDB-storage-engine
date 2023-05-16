@@ -109,7 +109,7 @@ for bm_type in A B C E F; do
 
   rm -rf $base_path/bench/results/*
   sed -i "s/<weights>.*<\/weights>/<weights>$weight<\/weights>/" $base_path/bench/config/ycsb.xml
-  EDIT_FENCE false
+  EDIT_FENCE true
   
   for i in 1; do
     for engine in ${engines[@]}; do
