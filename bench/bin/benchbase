@@ -52,7 +52,8 @@ fi
 message "Execute the benchmarking $benchmark"
 
 step=8
-num_threads=(1 $(seq $step $step 144))
+num_threads=(1 $(seq $step $step `nproc`))
+#num_threads=(72)
 engines=(
   lineairdb 
   innodb 
@@ -60,6 +61,7 @@ engines=(
 )
 
 for bm_type in A B C E F; do
+#for bm_type in E; do
 
   if [ $bm_type = A ]; then
     weight=50,0,0,50,0,0
@@ -97,6 +99,6 @@ for bm_type in A B C E F; do
 
   mkdir -p $base_path/bench/plots/ycsb/$bm_type
   cd $base_path/bench/plots/ycsb/$bm_type
-  python3 $base_path/bench/bin/plot.py --engine ${engines[@]} --xaxis ${num_threads[@]}
+  python3 $base_path/bench/bin/plot.py --engine ${engines[@]} --xaxis ${num_threads[@]} --workload $bm_type
 done
 message 'Finish the benchmarking'

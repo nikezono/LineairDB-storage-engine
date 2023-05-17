@@ -22,6 +22,7 @@
 
 set(CMAKE_CXX_STANDARD 17)
 
+add_definitions(-w)
 add_subdirectory(third_party/LineairDB)
 set(LINEAIRDB_SOURCES ha_lineairdb.cc ha_lineairdb_handler_miscs.cc)
 set(LINEAIRDB_PLUGIN_DYNAMIC "ha_lineairdb")

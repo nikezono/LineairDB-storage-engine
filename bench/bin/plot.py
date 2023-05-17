@@ -43,7 +43,7 @@ def genplot(sample, engine):
     ax.legend()
     ax.set_xlim(1, sample.numThread.max())
     ax.set_ylim(bottom=0)
-    fig.savefig("plot.pdf")
+    fig.savefig(f"{args.workload}.pdf")
 
 
 def main(args):
